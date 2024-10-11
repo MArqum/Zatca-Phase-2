@@ -1,0 +1,15 @@
+# Node modules
+/node_modules
+
+# Electron executable
+node_modules/electron/dist/electron.exe
+
+# Build outputs
+/dist
+/build
+/node_modules
+*.exe
+
+node_modules
+/node_modules
+/package-lock.json

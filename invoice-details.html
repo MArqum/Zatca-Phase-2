@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice Details</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    .invoice-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .company-info {
+      text-align: right;
+    }
+
+    .company-name {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .company-address {
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .company-logo {
+      text-align: center;
+      flex-grow: 1;
+    }
+
+    .invoice-details {
+      text-align: right;
+      font-size: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+
+    .total-section {
+      text-align: right;
+    }
+
+    .total-section td {
+      padding: 10px;
+    }
+
+    .item-list {
+      margin-top: 20px;
+    }
+
+    .heads {
+      background-color: lightyellow;
+    }
+  </style>
+</head>
+<body>
+  <div class="invoice-container">
+    <div class="header">
+      <!-- Company Information -->
+      <div class="company-info">
+        <div class="company-name">
+          Nas-HR <br> ناس للموارد البشرية
+        </div>
+        <div class="company-address">
+            Riyadh Saudi Arabia <br> الرياض، المملكة العربية السعودية
+          </div>
+      </div>
+
+      <!-- Company Logo -->
+      <div class="company-logo">
+        <img src="./Group 40341.png" alt="Company Logo" width="100"> <!-- Replace with the correct logo path -->
+      </div>
+
+      <!-- Invoice Details -->
+      <div class="invoice-details">
+        <p id="invoice-date">Invoice Date: </p>
+        <p id="invoice-number">Invoice Number: </p>
+      </div>
+    </div>
+
+    <table>
+      <thead class="heads">
+        <tr>
+          <th>
+            <div style="text-align: right;">إجمالي بدون ضريبة القيمة المضافة (SAR)</div>
+            <div>Total Without VAT (SAR)</div>
+          </th>
+          <th>
+            <div style="text-align: right;">سعر الوحدة (SAR)</div>
+            <div>Unit Price (SAR)</div>
+          </th>
+          <th>
+            <div style="text-align: right;">اسم العميل</div>
+            <div>Customer Name</div>
+          </th>
+          <th>
+            <div style="text-align: right;">الوصف</div>
+            <div>Description</div>
+          </th>
+          <th>
+            <div style="text-align: right;">الكمية</div>
+            <div>Quantity</div>
+          </th>
+          <th>
+            <div style="text-align: right;">الوحدة</div>
+            <div>Unit</div>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="invoice-table-body">
+        <!-- Data will be populated here -->
+      </tbody>
+    </table>
+    
+    <table class="total-section">
+      <tr>
+        <td>
+          <div style="text-align: right;">إجمالي قبل ضريبة القيمة المضافة:</div>
+          <div>Total Before VAT:</div>
+        </td>
+        <td id="total-before-vat"></td>
+      </tr>
+      <tr>
+        <td>
+          <div style="text-align: right;">الخصم:</div>
+          <div>Discount:</div>
+        </td>
+        <td id="discount"></td>
+      </tr>
+      <tr>
+        <td>
+          <div style="text-align: right;">قيمة ضريبة القيمة المضافة (15%):</div>
+          <div>VAT Value (15%):</div>
+        </td>
+        <td id="vat-value"></td>
+      </tr>
+      <tr>
+        <td>
+          <div style="text-align: right;">إجمالي الفاتورة:</div>
+          <div>Total Invoice:</div>
+        </td>
+        <td id="total-invoice"></td>
+      </tr>
+    </table>
+    
+    <!-- QR Code Display -->
+    <!-- QR Code Display -->
+<div class="qr-code-container" style="text-align: center; margin-top: 20px;"></div>
+
+  </div>
+
+  <!-- Include renderer.js -->
+  <script src="renderer.js"></script>
+</body>
+</html>

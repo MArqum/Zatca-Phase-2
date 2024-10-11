@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="title">Invoice List</title>
+  <style>
+    /* Your CSS remains unchanged */
+    body {
+      font-family: 'Arial', sans-serif;
+      padding: 20px;
+      background: url('./still-life-stacks-papers-documents.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+      margin: 0;
+    }
+
+    h1 {
+      text-align: center;
+      color: #444;
+      font-size: 2em;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .calendar-container, .filter-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .calendar-label, .filter-label {
+      margin-right: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #444;
+    }
+
+    #invoiceDate {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+      transition: border-color 0.3s ease;
+      margin-right: 10px;
+    }
+
+    #invoiceDate:focus {
+      border-color: #aaa;
+      outline: none;
+    }
+
+    .retry-all-button, .filter-button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin: 0 5px;
+    }
+
+    .retry-all-button:hover, .filter-button:hover {
+      background-color: #0056b3;
+    }
+
+    .retry-all-button {
+      background-color: #6c757d;
+      margin-left: 1050px;
+      margin-bottom: 20px;
+    }
+
+    .retry-all-button:hover {
+      background-color: #5a6268;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f8f9fa;
+      color: #333;
+      font-size: 16px;
+    }
+
+    td {
+      background-color: #fff;
+    }
+
+    tr:nth-child(even) td {
+      background-color: #f1f1f1;
+    }
+
+    .qr-button {
+      background-color: #6c757d;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+
+    .qr-button:hover {
+      background-color: #5a6268;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .language-selector {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .language-selector select {
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    .company-registration-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .company-label {
+      margin-right: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #444;
+    }
+
+    #companyRegNumber {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+      transition: border-color 0.3s ease;
+      margin-right: 10px;
+    }
+
+    #companyRegNumber:focus {
+      border-color: #aaa;
+      outline: none;
+    }
+
+    .submit-company-button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .submit-company-button:hover {
+      background-color: #0056b3;
+    }
+
+    .loader {
+      border: 8px solid #f3f3f3; /* Light grey */
+      border-top: 8px solid #ff0404; /* Blue */
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="company-registration-container">
+      <label for="companyRegNumber" class="company-label">Company Registration Number:</label>
+      <input type="text" id="companyRegNumber" placeholder="Enter Registration Number">
+      <button class="submit-company-button" onclick="submitCompanyRegNumber()">Submit</button>
+    </div>
+    <!-- Language Selector -->
+    <div class="language-selector">
+      <label for="languageSelect" id="languageLabel">Select Language:</label>
+      <select id="languageSelect">
+        <option value="en">English</option>
+        <option value="ar">عربي</option>
+      </select>
+    </div>
+
+    <h1 id="title">Invoice List</h1>
+
+    <!-- Date Picker -->
+    <div class="calendar-container">
+      <label for="invoiceDate" class="calendar-label" id="selectDate">Select Date:</label>
+      <input type="date" id="invoiceDate" onchange="loadInvoices()">
+    </div>
+
+    <!-- Status Buttons -->
+    <div class="filter-container">
+      <button class="filter-button" onclick="filterByStatus('success')" id="successButton">Success</button>
+      <button class="filter-button" onclick="filterByStatus('failed')" id="failedButton">Failed</button>
+    </div>
+
+    <!-- Loader Element -->
+<div id="loader" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+  <div class="loader" style="border: 8px solid #f3f3f3; border-top: 8px solid #ff0404; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;"></div>
+  <p>Loading...</p>
+</div>
+
+    <!-- Retry All Button -->
+    <button class="retry-all-button" onclick="retryAll()" id="retryAllButton">Retry All</button>
+
+    <table>
+        <thead>
+          <tr>
+            <th id="srNo">Sr.No</th>
+            <th id="invoices">Invoices</th>
+            <th id="status">Status</th>
+            <th id="qrCodes">QR Codes</th>
+            <th id="action">Action</th>
+          </tr>
+        </thead>
+        <tbody id="invoiceTableBody">
+          <!-- Rows will be dynamically generated here -->
+        </tbody>
+      </table>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron'); // Import ipcRenderer for IPC communication
+    const { shell } = require('electron');
+    let currentLanguage = 'en'; // Default language
+
+    function showLoader() {
+  document.getElementById('loader').style.display = 'block'; // Show loader
+}
+
+function hideLoader() {
+  document.getElementById('loader').style.display = 'none'; // Hide loader
+}
+
+    function submitCompanyRegNumber() {
+      const companyRegNumber = document.getElementById('companyRegNumber').value;
+
+      if (!companyRegNumber) {
+        alert('Please enter a valid Company Registration Number');
+        return;
+      }
+
+      showLoader();
+
+      document.addEventListener('DOMContentLoaded', () => {
+    ipcRenderer.on('display-invoices', (event, { message, invoices }) => {
+      // Your existing code
+    });
+  });
+
+      // Send the company registration number to the main process to fetch company-specific invoices
+      ipcRenderer.send('fetch-invoices-by-company', companyRegNumber);
+
+      // Clear the input field after submission
+      document.getElementById('companyRegNumber').value = '';
+    } function submitCompanyRegNumber() {
+      const companyRegNumber = document.getElementById('companyRegNumber').value;
+
+      if (!companyRegNumber) {
+        alert('Please enter a valid Company Registration Number');
+        return;
+      }
+
+      // Send the company registration number to the main process to fetch company-specific invoices
+      ipcRenderer.send('fetch-invoices-by-company', companyRegNumber);
+
+      // Show the main interface
+      document.getElementById('mainInterface').classList.remove('hidden');
+
+      // Clear the input field after submission
+      document.getElementById('companyRegNumber').value = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+    ipcRenderer.on('display-invoices', (event, { message, invoices }) => {
+      // Your existing code
+    });
+  });
+
+  
+    // Load language JSON file and update the UI
+    function loadLanguage(language) {
+      fetch(`locales/${language}.json`)
+        .then(response => response.json())
+        .then(data => {
+          // Update elements
+          document.getElementById('title').textContent = data.title;
+          document.title = data.title; // Update the browser tab title
+
+          document.getElementById('selectDate').textContent = data.selectDate;
+          document.getElementById('srNo').textContent = data.srNo;
+          document.getElementById('invoices').textContent = data.invoices;
+          document.getElementById('status').textContent = data.status;
+          document.getElementById('qrCodes').textContent = data.qrCodes;
+          document.getElementById('action').textContent = data.action;
+
+          const successButton = document.getElementById('successButton');
+          const failedButton = document.getElementById('failedButton');
+          successButton.textContent = data.success;
+          failedButton.textContent = data.failed;
+          document.getElementById('retryAllButton').textContent = data.retryAll;
+        })
+        .catch(error => console.error('Error loading language:', error));
+    }
+  
+    function updateDynamicContent(language) {
+      const retryButtons = document.querySelectorAll('.retry-button');
+      retryButtons.forEach(button => {
+        button.textContent = language === 'en' ? 'Retry' : 'إعادة المحاولة';
+      });
+  
+      const qrButtons = document.querySelectorAll('.qr-button');
+      qrButtons.forEach(button => {
+        button.textContent = language === 'en' ? 'Show QR' : 'عرض QR';
+      });
+  
+      const noDataRow = document.querySelector('#invoiceTableBody tr.no-data-row');
+      if (noDataRow) {
+        noDataRow.innerHTML = `<td colspan="5">${language === 'en' ? 'No invoices found for the selected date and filter.' : 'لم يتم العثور على فواتير للتاريخ والتصفية المحددة.'}</td>`;
+      }
+    }
+  
+    // Handle language change
+    document.getElementById('languageSelect').addEventListener('change', function () {
+      const selectedLanguage = this.value;
+      loadLanguage(selectedLanguage);
+    });
+  
+    // Initial load
+    loadLanguage(currentLanguage);
+  
+   // Function to load and display invoices for a selected date
+   function loadInvoices() {
+  const invoiceDate = document.getElementById('invoiceDate').value;
+
+  console.log(`Requesting invoices for date: ${invoiceDate}`);
+  showLoader();
+  // Send request to backend to fetch invoices
+  ipcRenderer.send('fetch-invoices', invoiceDate);
+}
+
+// Handle displaying invoices fetched from the backend
+ipcRenderer.on('display-invoices', (event, { message, invoices }) => {
+  const tableBody = document.getElementById('invoiceTableBody');
+  tableBody.innerHTML = ''; // Clear previous content
+  hideLoader();
+  if (message) {
+    console.log('Message from backend:', message);
+    tableBody.innerHTML = `<tr><td colspan="5">${message}</td></tr>`;
+    return;
+  }
+
+  // invoices is expected to be an array of invoice objects
+  invoices.forEach((invoice, index) => {
+    const invoiceDetails = invoice.processRes; // Access the main response for the invoice
+    const qrCodeImagePath = invoiceDetails.qrCodeImagePath; // Get the QR code image path
+    const status = invoiceDetails.status; // Get the status from processRes
+    const signedXmlPath = invoiceDetails.signedXmlPath; // Get the signed XML path
+
+    // Populate the table with the invoice data
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${invoice.invoices.DocNum || 'N/A'}</td>
+      <td>${invoice.invoices.DocDate || 'N/A'}</td>
+      <td>
+        ${status === 'success' ? '✓' : '✗'}
+      </td>
+      <td>
+        ${qrCodeImagePath ? 
+          `<img src="${qrCodeImagePath}" alt="QR Code" width="100" height="100">` : 
+          'N/A'}
+      </td>
+      <td>
+        ${status === 'success' ? 
+          `<button class="show-xml-button" onclick="openSignedXml('${signedXmlPath}')">Show XML File</button>` : 
+          `<button class="retry-button" onclick="retryInvoice()">Retry</button>`}
+      </td>
+    `;
+    row.addEventListener('click', () => openInvoiceDetail(invoice));
+    tableBody.appendChild(row);
+  });
+});
+
+
+function openSignedXml(signedXmlPath) {
+    // Log the original path for debugging
+    console.log('Original signed XML path:', signedXmlPath);
+
+    // Fix the path if needed: Ensure the path uses backslashes correctly
+    // Check if the path already starts with the correct drive letter or slash
+    let correctedPath = signedXmlPath;
+
+    // Ensure there are no double drive letters or incorrect concatenations
+    if (!correctedPath.startsWith('D:\\')) {
+        correctedPath = `D:\\Invoices\\${correctedPath.split('Invoices').pop()}`;
+    }
+
+    // Log the corrected path for debugging
+    console.log('Corrected full path:', correctedPath);
+
+    // Open the file using the shell module
+    const { shell } = require('electron');
+    shell.openPath(correctedPath).then(() => {
+        console.log('Opened signed XML file:', correctedPath);
+    }).catch((err) => {
+        console.error('Error opening signed XML file:', err);
+    });
+}
+
+
+
+
+
+
+
+
+function openInvoiceDetail(invoice) {
+  console.log('Opening invoice detail:', invoice);
+  // Send only the required details to the main process
+  const invoiceData = {
+    ...invoice.invoices, // Assuming this is the data you want to display
+    processRes: invoice.processRes, // Optional, if you need this as well
+  };
+  // Send the invoice data to the main process to open the detail window
+  ipcRenderer.send('view-invoice-details', invoiceData);
+}
+
+
+
+
+
+  function retryInvoice() {
+    console.log('Retrying invoice...');
+    // Implement your retry logic here
+  }
+
+  // Listen for status updates for each invoice
+  ipcRenderer.on('invoice-status-update', (event, { index, status, qrCode }) => {
+    const statusElement = document.getElementById(`status-${index}`);
+    const qrCodeElement = document.getElementById(`qr-code-${index}`);
+
+    if (statusElement) {
+      statusElement.textContent = status === 'success' ? '✓' : '✗';
+    }
+
+    if (qrCode && qrCodeElement) {
+      qrCodeElement.innerHTML = `<img src="data:image/png;base64,${qrCode}" alt="QR Code" width="100" height="100">`;
+    }
+  });
+
+
+  
+    function filterByStatus(status) {
+      document.querySelectorAll('.filter-button').forEach(button => button.classList.remove('active'));
+      document.getElementById(`${status}Button`).classList.add('active');
+      loadInvoices();
+    }
+  
+    function retryInvoice(index) {
+      console.log(`Retrying invoice at index ${index}`);
+      // Implement your retry logic here
+    }
+  
+    function retryAll() {
+      const invoiceDate = document.getElementById('invoiceDate').value;
+      ipcRenderer.send('retry-all', invoiceDate);
+    }
+  
+    ipcRenderer.on('retry-all-completed', (event, count) => {
+      alert(`Retried ${count} failed invoices.`);
+    });
+  </script>  
+</body>
+</html>
